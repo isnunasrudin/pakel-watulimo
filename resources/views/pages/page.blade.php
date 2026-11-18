@@ -53,5 +53,6 @@
   </div>
 </main>
 
+@include('partials.responsive-tables')
 @include('partials.home.footer')
 @endsection

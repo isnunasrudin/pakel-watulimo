@@ -373,5 +373,6 @@ articleImageLightbox?.addEventListener('close', () => {
 </script>
 @endpush
 
+@include('partials.responsive-tables')
 @include('partials.home.footer')
 @endsection

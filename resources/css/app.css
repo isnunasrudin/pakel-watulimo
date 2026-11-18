@@ -109,6 +109,8 @@ html.dark-mode .nav-dropdown > div a:hover{background:#1f2937}
 .article-body strong{font-weight:700}
 .article-body img{border-radius:.75rem;margin:1.5rem 0}
 .article-body blockquote{border-left:4px solid #f59e0b;background:#fffbeb;border-radius:0 .75rem .75rem 0;padding:1rem 1.25rem;margin:1.5rem 0;color:#14532d}
+.article-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:1.5rem 0;border-radius:.75rem;scrollbar-width:thin;scrollbar-color:#d1d5db transparent}
+.article-body .article-table-wrap > table{margin:0;min-width:100%}
 .article-body table{width:100%;border-collapse:separate;border-spacing:0;margin:1.5rem 0;overflow:hidden;border:1px solid #e5e7eb;border-radius:.75rem;font-size:.925rem;line-height:1.65}
 .article-body th,.article-body td{padding:.75rem .9rem;text-align:left;vertical-align:top;border-bottom:1px solid #e5e7eb}
 .article-body th{background:#f0fdf4;color:#166534;font-size:.8rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
@@ -123,4 +125,5 @@ html.dark-mode .article-body table{border-color:#334155}
 html.dark-mode .article-body th{background:#163827;color:#bbf7d0}
 html.dark-mode .article-body td{border-color:#334155;color:#cbd5e1}
 html.dark-mode .article-body tbody tr:nth-child(even){background:#0f172a}
+html.dark-mode .article-table-wrap{scrollbar-color:#475569 transparent}
 
