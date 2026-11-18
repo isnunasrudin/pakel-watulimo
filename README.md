@@ -8,7 +8,7 @@ Website resmi Desa Pakel, Kecamatan Watulimo, Kabupaten Trenggalek. Aplikasi ini
 - Berita dan artikel dengan kategori, pencarian, komentar termoderasi, serta lampiran file.
 - Galeri foto per album dengan lightbox, galeri video, dan halaman profil, pemerintahan, layanan, serta kontak.
 - Halaman kustom berpola `/halaman/{slug}` dengan rich content, sampul, lampiran, dan pengaturan SEO.
-- Panel admin di `/admin` untuk artikel, kategori, halaman, komentar, pengumuman, agenda, slide beranda, album/foto, video, perangkat desa, pilar desa, statistik, program, layanan, media sosial, APBDes, profil desa, menu header, dan pengguna.
+- Panel admin pada path yang dikonfigurasi di `AdminPanelProvider` (tidak dipublikasikan di README) untuk artikel, kategori, halaman, komentar, pengumuman, agenda, slide beranda, album/foto, video, perangkat desa, pilar desa, statistik, program, layanan, media sosial, APBDes, profil desa, menu header, dan pengguna.
 - SEO dinamis, `sitemap.xml`, dan `robots.txt`.
 - Halaman error 4xx/5xx dengan tampilan yang selaras dengan situs publik, termasuk mode gelap.
 - Semua gambar raster yang diunggah diproses menjadi WebP yang dioptimalkan melalui `ImageOptimizer`.

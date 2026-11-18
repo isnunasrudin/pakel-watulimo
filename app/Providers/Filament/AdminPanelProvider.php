@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\PreventAdminIndexing;
 use App\Services\VillageProfileService;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -47,8 +48,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                PreventAdminIndexing::class,
             ])
             ->authMiddleware([
+                PreventAdminIndexing::class,
                 Authenticate::class,
             ]);
     }
