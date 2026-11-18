@@ -56,7 +56,21 @@
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           @foreach ($pillars as $pillar)
             <article class="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-              <img src="{{ $pillar->photoUrl() }}" alt="Foto {{ $pillar->name }}" class="block w-full h-auto" style="background-color: {{ $pillar->backgroundColor() }}" loading="lazy">
+              <button
+                type="button"
+                data-pillar-image="{{ $pillar->photoUrl() }}"
+                data-pillar-name="{{ $pillar->name }}"
+                data-pillar-position="{{ $pillar->position }}"
+                aria-label="Perbesar foto {{ $pillar->name }}"
+                aria-haspopup="dialog"
+                class="group relative block w-full overflow-hidden text-left"
+                style="background-color: {{ $pillar->backgroundColor() }}"
+              >
+                <img src="{{ $pillar->photoUrl() }}" alt="Foto {{ $pillar->name }}" class="block h-auto w-full transition duration-500 group-hover:scale-105" loading="lazy">
+                <span class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition group-hover:bg-black/25 group-hover:opacity-100" aria-hidden="true">
+                  <i class="fas fa-expand text-xl"></i>
+                </span>
+              </button>
               <div class="p-5">
                 <h3 class="text-lg font-bold text-gray-900">{{ $pillar->name }}</h3>
                 <p class="mt-1 text-sm font-medium text-green-700">{{ $pillar->position }}</p>
@@ -73,6 +87,57 @@
     </section>
   </div>
 </main>
+
+<dialog id="pilarPhotoLightbox" aria-label="Pratinjau foto pilar desa" aria-describedby="pilarLightboxCaption" class="w-11/12 max-w-3xl overflow-hidden rounded-2xl border-0 bg-gray-950 p-0 text-white shadow-2xl">
+  <div class="relative">
+    <button id="closePilarLightbox" type="button" class="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80" aria-label="Tutup pratinjau foto">
+      <i class="fas fa-xmark text-lg" aria-hidden="true"></i>
+    </button>
+    <img id="pilarLightboxImage" src="" alt="" class="max-h-[78vh] w-full bg-black object-contain">
+    <p id="pilarLightboxCaption" aria-live="polite" class="px-5 py-4 text-center text-sm text-gray-200"></p>
+  </div>
+</dialog>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const lightbox = document.getElementById('pilarPhotoLightbox');
+  const lightboxImage = document.getElementById('pilarLightboxImage');
+  const lightboxCaption = document.getElementById('pilarLightboxCaption');
+  const closeLightbox = document.getElementById('closePilarLightbox');
+  const buttons = document.querySelectorAll('[data-pillar-image]');
+
+  if (!lightbox || !lightboxImage || !lightboxCaption || buttons.length === 0) return;
+
+  let lastFocusedPillar = null;
+
+  const setScrollLocked = (locked) => {
+    document.body.style.overflow = locked ? 'hidden' : '';
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      lastFocusedPillar = button;
+      lightboxImage.src = button.dataset.pillarImage;
+      lightboxImage.alt = 'Foto ' + button.dataset.pillarName;
+      lightboxCaption.textContent = [button.dataset.pillarName, button.dataset.pillarPosition].filter(Boolean).join(' — ');
+      lightbox.showModal();
+      setScrollLocked(true);
+      closeLightbox?.focus();
+    });
+  });
+
+  closeLightbox?.addEventListener('click', () => lightbox.close());
+  lightbox.addEventListener('click', (event) => {
+    if (event.target === lightbox) lightbox.close();
+  });
+  lightbox.addEventListener('close', () => {
+    setScrollLocked(false);
+    lastFocusedPillar?.focus();
+  });
+});
+</script>
+@endpush
 
 @include('partials.home.footer')
 @endsection

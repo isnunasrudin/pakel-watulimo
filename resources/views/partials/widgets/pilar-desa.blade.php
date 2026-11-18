@@ -52,32 +52,37 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const slider = document.querySelector('.pilarSwiper');
-  if (!slider || typeof Swiper === 'undefined') return;
+  let swiper = null;
 
-  const slideCount = slider.querySelectorAll('.swiper-slide').length;
-  const swiper = new Swiper(slider, {
-    loop: slideCount > 1,
-    autoHeight: true,
-    slidesPerView: 2,
-    spaceBetween: 12,
-    navigation: { nextEl: '.pilarSwiper .swiper-button-next', prevEl: '.pilarSwiper .swiper-button-prev' },
-    autoplay: slideCount > 1 ? { delay: 3000, disableOnInteraction: false } : false,
-  });
+  if (slider && typeof Swiper !== 'undefined') {
+    const slideCount = slider.querySelectorAll('.swiper-slide').length;
+
+    swiper = new Swiper(slider, {
+      loop: slideCount > 1,
+      autoHeight: true,
+      slidesPerView: 2,
+      spaceBetween: 12,
+      navigation: { nextEl: '.pilarSwiper .swiper-button-next', prevEl: '.pilarSwiper .swiper-button-prev' },
+      autoplay: slideCount > 1 ? { delay: 3000, disableOnInteraction: false } : false,
+    });
+  }
 
   const lightbox = document.getElementById('pilarPhotoLightbox');
   const lightboxImage = document.getElementById('pilarLightboxImage');
   const lightboxCaption = document.getElementById('pilarLightboxCaption');
   const closeLightbox = document.getElementById('closePilarLightbox');
+  const buttons = document.querySelectorAll('[data-pillar-image]');
+
+  if (!lightbox || !lightboxImage || !lightboxCaption || buttons.length === 0) return;
+
   let lastFocusedPillar = null;
 
   const setPillarScrollLocked = (locked) => {
     document.body.style.overflow = locked ? 'hidden' : '';
   };
 
-  document.querySelectorAll('[data-pillar-image]').forEach((button) => {
+  buttons.forEach((button) => {
     button.addEventListener('click', () => {
-      if (!lightbox || !lightboxImage || !lightboxCaption) return;
-
       lastFocusedPillar = button;
       lightboxImage.src = button.dataset.pillarImage;
       lightboxImage.alt = 'Foto ' + button.dataset.pillarName;
@@ -85,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
       lightbox.showModal();
       setPillarScrollLocked(true);
       closeLightbox?.focus();
-      swiper.autoplay?.stop();
+      swiper?.autoplay?.stop();
     });
   });
 
@@ -96,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
   lightbox?.addEventListener('close', () => {
     setPillarScrollLocked(false);
     lastFocusedPillar?.focus();
-    swiper.autoplay?.start();
+    swiper?.autoplay?.start();
   });
 });
 </script>
