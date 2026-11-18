@@ -20,7 +20,19 @@
     <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
       @if ($page->coverUrl())
         <figure>
-          <img src="{{ $page->coverUrl() }}" alt="{{ $page->title }}" class="aspect-[16/9] w-full object-cover">
+          <button
+            type="button"
+            data-content-image="{{ $page->coverUrl() }}"
+            data-content-image-caption="{{ $page->title }}"
+            aria-label="Perbesar gambar sampul: {{ $page->title }}"
+            aria-haspopup="dialog"
+            class="group relative block w-full overflow-hidden bg-gray-100 text-left"
+          >
+            <img src="{{ $page->coverUrl() }}" alt="{{ $page->title }}" class="aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-[1.01]">
+            <span class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition group-hover:bg-black/25 group-hover:opacity-100" aria-hidden="true">
+              <i class="fas fa-expand text-xl"></i>
+            </span>
+          </button>
         </figure>
       @endif
 
@@ -53,6 +65,7 @@
   </div>
 </main>
 
+@include('partials.content-image-lightbox')
 @include('partials.responsive-tables')
 @include('partials.home.footer')
 @endsection
