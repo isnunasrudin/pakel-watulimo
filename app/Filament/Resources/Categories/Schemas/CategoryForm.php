@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Filament\Resources\Categories\Schemas;
+
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+
+class CategoryForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextInput::make('name')
+                    ->label('Nama kategori')
+                    ->required()
+                    ->maxLength(100)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (string $operation, ?string $state, callable $set): void {
+                        if ($operation === 'create') {
+                            $set('slug', Str::slug((string) $state));
+                        }
+                    }),
+                TextInput::make('slug')
+                    ->required()
+                    ->maxLength(120)
+                    ->unique(ignoreRecord: true),
+                Textarea::make('description')
+                    ->label('Deskripsi')
+                    ->rows(3)
+                    ->columnSpanFull(),
+                Select::make('color')
+                    ->label('Warna label')
+                    ->options([
+                        'green' => 'Hijau',
+                        'amber' => 'Kuning',
+                        'yellow' => 'Kuning muda',
+                        'blue' => 'Biru',
+                        'purple' => 'Ungu',
+                        'teal' => 'Teal',
+                        'red' => 'Merah',
+                        'indigo' => 'Indigo',
+                        'pink' => 'Pink',
+                        'sky' => 'Langit',
+                    ])
+                    ->required()
+                    ->default('green'),
+                TextInput::make('order')
+                    ->label('Urutan')
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0),
+            ]);
+    }
+}

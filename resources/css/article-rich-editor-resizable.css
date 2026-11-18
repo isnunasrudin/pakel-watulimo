@@ -1,0 +1,7 @@
+.fi-fo-rich-editor.article-rich-editor-resizable .fi-fo-rich-editor-content > .tiptap {
+    flex: 0 1 auto;
+    height: auto;
+    min-height: var(--min-height, 12rem);
+    overflow-y: auto;
+    resize: vertical;
+}

@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('program_links', function (Blueprint $table) {
+            $table->string('background_color', 7)->default('#f3f4f6');
+        });
+
+        Schema::table('village_officials', function (Blueprint $table) {
+            $table->string('background_color', 7)->default('#f3f4f6');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('village_officials', function (Blueprint $table) {
+            $table->dropColumn('background_color');
+        });
+
+        Schema::table('program_links', function (Blueprint $table) {
+            $table->dropColumn('background_color');
+        });
+    }
+};
