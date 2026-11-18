@@ -71,7 +71,7 @@
 
         @if ($articles->hasPages())
           <div class="mt-8">
-            {{ $articles->links() }}
+            {{ $articles->onEachSide(1)->links('partials.pagination') }}
           </div>
         @endif
       </div>

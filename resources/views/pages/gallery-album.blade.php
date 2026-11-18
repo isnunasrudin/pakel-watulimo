@@ -68,7 +68,7 @@
       </div>
 
       <div class="mt-10">
-        {{ $photos->links() }}
+        {{ $photos->onEachSide(1)->links('partials.pagination') }}
       </div>
     @endif
   </div>

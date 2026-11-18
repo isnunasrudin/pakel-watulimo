@@ -52,7 +52,7 @@
       </div>
 
       <div class="mt-10">
-        {{ $videos->links() }}
+        {{ $videos->onEachSide(1)->links('partials.pagination') }}
       </div>
     @endif
   </div>

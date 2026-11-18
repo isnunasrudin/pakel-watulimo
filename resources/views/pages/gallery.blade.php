@@ -51,7 +51,7 @@
       </div>
 
       <div class="mt-10">
-        {{ $albums->links() }}
+        {{ $albums->onEachSide(1)->links('partials.pagination') }}
       </div>
     @endif
   </div>

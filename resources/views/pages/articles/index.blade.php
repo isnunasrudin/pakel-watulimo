@@ -66,20 +66,30 @@
     @else
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @foreach ($articles as $article)
-          <article class="flex flex-col overflow-hidden rounded-2xl bg-white shadow card-hover">
+          <article @class([
+            'flex flex-col overflow-hidden rounded-2xl bg-white shadow card-hover',
+            'relative border border-amber-300/80 shadow-lg ring-1 ring-amber-300/60' => $article->is_pinned,
+          ])>
+            @if ($article->is_pinned)
+              <span class="absolute inset-x-0 top-0 z-10 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-green-700" aria-hidden="true"></span>
+            @endif
             <a href="{{ route('articles.show', $article) }}" class="relative block aspect-[16/10] overflow-hidden bg-gray-100">
               <img src="{{ $article->coverUrl() }}" alt="{{ $article->title }}" class="h-full w-full object-cover transition duration-500 hover:scale-105" loading="lazy">
             </a>
             <div class="flex flex-1 flex-col p-5">
               <div class="flex flex-wrap gap-2">
                 @if ($article->is_pinned)
-                  <span class="badge bg-amber-100 text-amber-700"><i class="fas fa-thumbtack mr-1" aria-hidden="true"></i>Disematkan</span>
+                  <span class="badge bg-amber-500 text-white shadow-sm"><i class="fas fa-thumbtack mr-1" aria-hidden="true"></i>Disematkan</span>
                 @endif
                 @if ($article->category)
                   <a href="{{ route('categories.show', $article->category) }}" class="badge {{ $article->category->badgeClasses() }}">{{ $article->category->name }}</a>
                 @endif
               </div>
-              <h2 class="mt-3 text-lg font-bold leading-snug">
+              <h2 @class([
+                'mt-3 font-bold leading-snug',
+                'text-xl text-gray-900' => $article->is_pinned,
+                'text-lg' => ! $article->is_pinned,
+              ])>
                 <a href="{{ route('articles.show', $article) }}" class="transition hover:text-green-700">{{ $article->title }}</a>
               </h2>
               <p class="mt-2 text-sm text-gray-600 line-clamp-3">{{ $article->summary(150) }}</p>
@@ -93,7 +103,7 @@
       </div>
 
       <div class="mt-10">
-        {{ $articles->links() }}
+        {{ $articles->onEachSide(1)->links('partials.pagination') }}
       </div>
     @endif
   </div>
