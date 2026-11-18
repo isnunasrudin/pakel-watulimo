@@ -25,7 +25,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('gajahbertelur')
             ->favicon(fn (): string => app(VillageProfileService::class)->settings()->faviconUrl())
             ->login()
             ->colors([
