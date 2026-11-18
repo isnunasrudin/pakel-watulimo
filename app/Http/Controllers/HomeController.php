@@ -39,8 +39,9 @@ class HomeController extends Controller
             ->with(['category', 'author', 'media'])
             ->orderByDesc('is_pinned')
             ->latest('published_at')
-            ->limit(8)
-            ->get();
+            ->orderByDesc('id')
+            ->paginate(8)
+            ->withQueryString();
 
         $announcement = Announcement::query()
             ->active()

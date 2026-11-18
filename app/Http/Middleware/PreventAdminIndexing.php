@@ -15,7 +15,9 @@ class PreventAdminIndexing
     {
         $response = $next($request);
 
-        $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        if ($request->routeIs('filament.*')) {
+            $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        }
 
         return $response;
     }

@@ -34,26 +34,18 @@
               <div class="swiper-slide relative">
                 @if ($slide['link'])
                   <a href="{{ $slide['link'] }}" @if ($slide['external']) target="_blank" rel="noopener noreferrer" @endif aria-label="Buka {{ $slide['title'] }}" class="group relative block">
-                    <img src="{{ $slide['image'] }}" alt="{{ $slide['alt'] }}" class="w-full h-64 md:h-80 object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-5">
-                      <div class="text-white">
-                        <h3 class="font-bold text-xl">{{ $slide['title'] }}</h3>
+                @endif
+                    <img src="{{ $slide['image'] }}" alt="{{ $slide['alt'] }}" class="h-72 w-full object-cover sm:h-80 md:h-[26rem]">
+                    <div class="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 to-transparent p-5">
+                      <div class="min-w-0 text-white">
+                        <h3 class="line-clamp-2 text-xl font-bold leading-snug" title="{{ $slide['title'] }}">{{ $slide['title'] }}</h3>
                         @if (filled($slide['description']))
-                          <p class="text-sm text-gray-200">{{ \Illuminate\Support\Str::limit($slide['description'], 100) }}</p>
+                          <p class="line-clamp-2 text-sm text-gray-200">{{ \Illuminate\Support\Str::limit($slide['description'], 100) }}</p>
                         @endif
                       </div>
                     </div>
+                @if ($slide['link'])
                   </a>
-                @else
-                  <img src="{{ $slide['image'] }}" alt="{{ $slide['alt'] }}" class="w-full h-64 md:h-80 object-cover">
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-5">
-                    <div class="text-white">
-                      <h3 class="font-bold text-xl">{{ $slide['title'] }}</h3>
-                      @if (filled($slide['description']))
-                        <p class="text-sm text-gray-200">{{ \Illuminate\Support\Str::limit($slide['description'], 100) }}</p>
-                      @endif
-                    </div>
-                  </div>
                 @endif
               </div>
             @endforeach
@@ -76,6 +68,12 @@
             <p class="rounded-2xl bg-white p-6 text-sm text-gray-600 shadow">Belum ada artikel yang diterbitkan.</p>
           @endforelse
         </div>
+
+        @if ($articles->hasPages())
+          <div class="mt-8">
+            {{ $articles->links() }}
+          </div>
+        @endif
       </div>
     </div>
 
