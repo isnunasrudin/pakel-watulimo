@@ -84,7 +84,19 @@
       </header>
 
       <figure>
-        <img src="{{ $article->coverUrl() }}" alt="{{ $article->title }}" class="aspect-[16/9] w-full object-cover">
+        <button
+          type="button"
+          data-article-image="{{ $article->coverUrl() }}"
+          data-article-image-caption="{{ $article->title }}"
+          aria-label="Perbesar gambar sampul: {{ $article->title }}"
+          aria-haspopup="dialog"
+          class="group relative block w-full overflow-hidden bg-gray-100 text-left"
+        >
+          <img src="{{ $article->coverUrl() }}" alt="{{ $article->title }}" class="aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-[1.01]">
+          <span class="absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition group-hover:bg-black/25 group-hover:opacity-100" aria-hidden="true">
+            <i class="fas fa-expand text-xl"></i>
+          </span>
+        </button>
         @if ($article->category)
           <figcaption class="px-6 pt-3 text-sm text-gray-500 md:px-10">
             Artikel kategori {{ $article->category->name }} — Desa Pakel.
@@ -207,6 +219,16 @@
   </div>
 </main>
 
+<dialog id="articleImageLightbox" aria-label="Pratinjau gambar artikel" aria-describedby="articleImageCaption" class="w-11/12 max-w-6xl overflow-hidden rounded-2xl border-0 bg-gray-950 p-0 text-white shadow-2xl">
+  <div class="relative">
+    <button id="closeArticleImageLightbox" type="button" class="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80" aria-label="Tutup pratinjau gambar">
+      <i class="fas fa-xmark text-lg" aria-hidden="true"></i>
+    </button>
+    <img id="articleImageLightboxImage" src="" alt="" class="max-h-[78vh] w-full bg-black object-contain">
+    <p id="articleImageCaption" aria-live="polite" class="px-5 py-4 text-center text-sm text-gray-200"></p>
+  </div>
+</dialog>
+
 @push('scripts')
 <script>
 const shareButton = document.getElementById('shareArticle');
@@ -285,6 +307,68 @@ commentFormToggle.addEventListener('click', () => {
   if (!isExpanded) {
     document.getElementById('commentName').focus();
   }
+});
+
+const articleImageLightbox = document.getElementById('articleImageLightbox');
+const articleImageLightboxImage = document.getElementById('articleImageLightboxImage');
+const articleImageCaption = document.getElementById('articleImageCaption');
+const closeArticleImageLightbox = document.getElementById('closeArticleImageLightbox');
+let lastFocusedArticleImage = null;
+
+function setArticleScrollLocked(locked) {
+  document.body.style.overflow = locked ? 'hidden' : '';
+}
+
+function openArticleImageLightbox(src, caption) {
+  if (!articleImageLightbox || !articleImageLightboxImage || !articleImageCaption || !src) return;
+
+  articleImageLightboxImage.src = src;
+  articleImageLightboxImage.alt = caption || 'Gambar artikel';
+  articleImageCaption.textContent = caption || '';
+  articleImageLightbox.showModal();
+  setArticleScrollLocked(true);
+  closeArticleImageLightbox?.focus();
+}
+
+document.querySelectorAll('[data-article-image]').forEach((button) => {
+  button.addEventListener('click', () => {
+    lastFocusedArticleImage = button;
+    openArticleImageLightbox(button.dataset.articleImage, button.dataset.articleImageCaption);
+  });
+});
+
+document.querySelectorAll('.article-body img').forEach((image) => {
+  image.style.cursor = 'zoom-in';
+  image.setAttribute('role', 'button');
+  image.setAttribute('tabindex', '0');
+  image.setAttribute('aria-haspopup', 'dialog');
+
+  const openImage = () => {
+    const figureCaption = image.closest('figure')?.querySelector('figcaption')?.textContent.trim();
+    lastFocusedArticleImage = image;
+    openArticleImageLightbox(image.currentSrc || image.src, figureCaption || image.alt || '');
+  };
+
+  image.addEventListener('click', (event) => {
+    event.preventDefault();
+    openImage();
+  });
+
+  image.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+
+    event.preventDefault();
+    openImage();
+  });
+});
+
+closeArticleImageLightbox?.addEventListener('click', () => articleImageLightbox?.close());
+articleImageLightbox?.addEventListener('click', (event) => {
+  if (event.target === articleImageLightbox) articleImageLightbox.close();
+});
+articleImageLightbox?.addEventListener('close', () => {
+  setArticleScrollLocked(false);
+  lastFocusedArticleImage?.focus();
 });
 </script>
 @endpush

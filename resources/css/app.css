@@ -46,8 +46,8 @@ img{max-width:100%;display:block}
 .selayangSwiper .swiper-slide .absolute{pointer-events:none}
 
 /* Gallery photo lightbox: Tailwind preflight resets dialog margin, so restore centering. */
-#photoLightbox,#officialPhotoLightbox,#pilarPhotoLightbox{margin:auto}
-#photoLightbox::backdrop,#officialPhotoLightbox::backdrop{background:rgba(2,6,23,.78);backdrop-filter:blur(2px)}
+#photoLightbox,#officialPhotoLightbox,#pilarPhotoLightbox,#articleImageLightbox{margin:auto}
+#photoLightbox::backdrop,#officialPhotoLightbox::backdrop,#articleImageLightbox::backdrop{background:rgba(2,6,23,.78);backdrop-filter:blur(2px)}
 .swiper-slide img{width:100%;object-fit:cover;border-radius:12px;max-width:100%}
 .grid > *, .flex > * { min-width: 0 }
 @media(max-width:768px){.swiper-slide img{max-height:240px}}
