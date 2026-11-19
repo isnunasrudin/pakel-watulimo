@@ -92,7 +92,7 @@
               ])>
                 <a href="{{ route('articles.show', $article) }}" class="transition hover:text-green-700">{{ $article->title }}</a>
               </h2>
-              <p class="mt-2 text-sm text-gray-600 line-clamp-3">{{ $article->summary(150) }}</p>
+              <p class="mt-2 hidden text-sm text-gray-600 md:line-clamp-3">{{ $article->summary(150) }}</p>
               <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500">
                 <span><i class="fas fa-calendar-alt mr-1" aria-hidden="true"></i>{{ ($article->published_at ?? $article->created_at)->format('d M Y') }}</span>
                 <span><i class="fas fa-eye mr-1" aria-hidden="true"></i>{{ number_format($article->views_count, 0, ',', '.') }} dibaca</span>

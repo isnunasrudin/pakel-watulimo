@@ -4,7 +4,9 @@
 @endphp
 
 
-<section id="beranda" class="hero-bg text-white min-h-[80vh] flex items-center" @if ($heroImage) style="background-image: var(--hero-overlay), url('{{ $heroImage }}')" @endif>
+<div id="beranda">
+  @include('partials.home.mobile-agenda-marquee')
+<section class="hero-bg hidden min-h-[80vh] items-center text-white md:flex" @if ($heroImage) style="background-image: var(--hero-overlay), url('{{ $heroImage }}')" @endif>
 <div class="max-w-7xl mx-auto px-4 py-24 md:py-32 w-full">
   <div class="grid items-center gap-8 {{ $heroLogo ? 'md:grid-cols-[minmax(0,1.2fr)_minmax(260px,.8fr)] lg:gap-12' : '' }}">
     <div class="max-w-3xl">
@@ -24,3 +26,4 @@
   </div>
 </div>
 </section>
+</div>
