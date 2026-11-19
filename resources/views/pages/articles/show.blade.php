@@ -281,7 +281,7 @@
     @endif
       </div>
 
-      @include('partials.home.sidebar')
+      @include('partials.home.sidebar-compact')
     </div>
   </div>
 </main>

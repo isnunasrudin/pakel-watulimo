@@ -51,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with(app(SidebarDataService::class)->get());
         });
 
+        ViewFacade::composer('partials.home.sidebar-compact', function (View $view): void {
+            $view->with(app(SidebarDataService::class)->getCompact());
+        });
+
         ViewFacade::composer('partials.home.navbar', function (View $view): void {
             $headerMenu = Cache::remember('public.header-menu', now()->addMinutes(10), function (): array {
                 return HeaderMenuItem::query()

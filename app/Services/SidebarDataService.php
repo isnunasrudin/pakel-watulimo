@@ -8,7 +8,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Video;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SidebarDataService
@@ -19,16 +19,16 @@ class SidebarDataService
     ) {}
 
     /**
-     * Get the shared public sidebar data.
+     * Get the shared public sidebar data for the homepage.
      *
      * @return array{
-     *     albums: \Illuminate\Database\Eloquent\Collection<int, Album>,
-     *     videos: \Illuminate\Database\Eloquent\Collection<int, Video>,
+     *     albums: Collection<int, Album>,
+     *     videos: Collection<int, Video>,
      *     weather: array<string, mixed>,
      *     visitorStats: array{todayVisitors: int, activeVisitors: int, totalReaders: int},
      *     agendaGroups: array{past: Collection<int, Agenda>, ongoing: Collection<int, Agenda>, upcoming: Collection<int, Agenda>},
-     *     categories: \Illuminate\Database\Eloquent\Collection<int, Category>,
-     *     articleArchives: Collection<int, array{key: string, label: string, count: int}>,
+     *     categories: Collection<int, Category>,
+     *     articleArchives: \Illuminate\Support\Collection<int, array{key: string, label: string, count: int}>,
      *     officials: list<array{name: string, position: string, photo_url: string, background_color: string, phone: ?string}>,
      *     pillars: list<array{name: string, position: string, photo_url: string, background_color: string, phone: ?string}>,
      *     programLinks: list<array{title: string, image_url: ?string, background_color: string, safe_url: ?string}>,
@@ -53,12 +53,54 @@ class SidebarDataService
             ->limit(4)
             ->get();
 
+        return [
+            'albums' => $albums,
+            'videos' => $videos,
+            'weather' => $this->weatherService->getForecast(),
+            'visitorStats' => [
+                'todayVisitors' => $this->countVisitorsSince(now('Asia/Jakarta')->startOfDay()->timestamp),
+                'activeVisitors' => $this->countVisitorsSince(now()->subMinutes((int) config('session.lifetime', 120))->timestamp),
+                'totalReaders' => (int) Article::query()->sum('views_count'),
+            ],
+            'agendaGroups' => $this->agendaGroups(),
+            'categories' => $this->categories(),
+            'articleArchives' => $this->articleArchives(),
+            'officials' => $villageContent['officials'],
+            'pillars' => $villageContent['pillars'] ?? [],
+            'programLinks' => $villageContent['programLinks'],
+            'socialLinks' => $villageContent['socialLinks'],
+        ];
+    }
+
+    /**
+     * Get the compact sidebar data used on article and custom page detail views.
+     *
+     * @return array{
+     *     agendaGroups: array{past: Collection<int, Agenda>, ongoing: Collection<int, Agenda>, upcoming: Collection<int, Agenda>},
+     *     categories: Collection<int, Category>,
+     *     articleArchives: Collection<int, array{key: string, label: string, count: int}>
+     * }
+     */
+    public function getCompact(): array
+    {
+        return [
+            'agendaGroups' => $this->agendaGroups(),
+            'categories' => $this->categories(),
+            'articleArchives' => $this->articleArchives(),
+        ];
+    }
+
+    /**
+     * @return array{past: Collection<int, Agenda>, ongoing: Collection<int, Agenda>, upcoming: Collection<int, Agenda>}
+     */
+    private function agendaGroups(): array
+    {
         $agendas = Agenda::query()
             ->published()
             ->orderBy('starts_at')
             ->get();
 
-        $agendaGroups = [
+        return [
             'past' => $agendas->filter(fn (Agenda $agenda): bool => $agenda->isPast())
                 ->sortByDesc('starts_at')
                 ->take(3)
@@ -70,16 +112,28 @@ class SidebarDataService
                 ->take(3)
                 ->values(),
         ];
+    }
 
-        $categories = Category::query()
+    /**
+     * @return Collection<int, Category>
+     */
+    private function categories(): Collection
+    {
+        return Category::query()
             ->withCount(['articles' => fn (Builder $query) => $query->published()])
             ->whereHas('articles', fn (Builder $query) => $query->published())
             ->orderBy('order')
             ->orderBy('name')
             ->take(7)
             ->get();
+    }
 
-        $articleArchives = Article::query()
+    /**
+     * @return \Illuminate\Support\Collection<int, array{key: string, label: string, count: int}>
+     */
+    private function articleArchives(): \Illuminate\Support\Collection
+    {
+        return Article::query()
             ->published()
             ->whereNotNull('published_at')
             ->orderByDesc('published_at')
@@ -96,24 +150,6 @@ class SidebarDataService
             })
             ->take(6)
             ->values();
-
-        return [
-            'albums' => $albums,
-            'videos' => $videos,
-            'weather' => $this->weatherService->getForecast(),
-            'visitorStats' => [
-                'todayVisitors' => $this->countVisitorsSince(now('Asia/Jakarta')->startOfDay()->timestamp),
-                'activeVisitors' => $this->countVisitorsSince(now()->subMinutes((int) config('session.lifetime', 120))->timestamp),
-                'totalReaders' => (int) Article::query()->sum('views_count'),
-            ],
-            'agendaGroups' => $agendaGroups,
-            'categories' => $categories,
-            'articleArchives' => $articleArchives,
-            'officials' => $villageContent['officials'],
-            'pillars' => $villageContent['pillars'] ?? [],
-            'programLinks' => $villageContent['programLinks'],
-            'socialLinks' => $villageContent['socialLinks'],
-        ];
     }
 
     /**
