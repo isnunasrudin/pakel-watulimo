@@ -12,7 +12,7 @@ class WeatherService
 {
     private const CACHE_KEY = 'weather.forecast';
 
-    private const FALLBACK_CACHE_MINUTES = 10;
+    private const CACHE_MINUTES = 10;
 
     /**
      * Get the current weather and a short daily forecast.
@@ -36,18 +36,14 @@ class WeatherService
         $forecast = $this->fetchForecast();
 
         if ($forecast !== null) {
-            Cache::put(
-                self::CACHE_KEY,
-                $forecast,
-                now()->addMinutes((int) config('services.weather.cache_minutes', 1440)),
-            );
+            Cache::put(self::CACHE_KEY, $forecast, now()->addMinutes(self::CACHE_MINUTES));
 
             return $forecast;
         }
 
         $fallback = $this->fallbackForecast();
 
-        Cache::put(self::CACHE_KEY, $fallback, now()->addMinutes(self::FALLBACK_CACHE_MINUTES));
+        Cache::put(self::CACHE_KEY, $fallback, now()->addMinutes(self::CACHE_MINUTES));
 
         return $fallback;
     }
@@ -65,13 +61,15 @@ class WeatherService
      */
     private function fetchForecast(): ?array
     {
+        $timezone = (string) config('services.weather.timezone', 'Asia/Jakarta');
+
         $query = [
             'latitude' => (float) config('services.weather.latitude', -8.25),
             'longitude' => (float) config('services.weather.longitude', 111.65),
             'current' => 'temperature_2m,weather_code',
             'daily' => 'temperature_2m_max,weather_code',
-            'timezone' => (string) config('services.weather.timezone', 'Asia/Jakarta'),
-            'forecast_days' => 4,
+            'timezone' => $timezone,
+            'forecast_days' => 5,
         ];
 
         if (filled(config('services.weather.api_key'))) {
@@ -114,8 +112,13 @@ class WeatherService
         $dates = is_array($daily['time'] ?? null) ? $daily['time'] : [];
         $maxTemperatures = is_array($daily['temperature_2m_max'] ?? null) ? $daily['temperature_2m_max'] : [];
         $weatherCodes = is_array($daily['weather_code'] ?? null) ? $daily['weather_code'] : [];
+        $today = now($timezone)->toDateString();
 
-        foreach (array_slice($dates, 0, 4) as $index => $date) {
+        foreach ($dates as $index => $date) {
+            if ((string) $date === $today) {
+                continue;
+            }
+
             if (! isset($maxTemperatures[$index], $weatherCodes[$index])) {
                 continue;
             }
@@ -128,6 +131,10 @@ class WeatherService
                 'icon' => $weather['icon'],
                 'description' => $weather['description'],
             ];
+
+            if (count($forecast) === 4) {
+                break;
+            }
         }
 
         if ($forecast === []) {
@@ -142,7 +149,7 @@ class WeatherService
             ],
             'forecast' => $forecast,
             'location' => (string) config('services.weather.location', 'Watulimo, Trenggalek'),
-            'updated_at' => now((string) config('services.weather.timezone', 'Asia/Jakarta'))->format('H:i'),
+            'updated_at' => now($timezone)->format('H:i'),
             'is_fallback' => false,
         ];
     }
@@ -163,7 +170,7 @@ class WeatherService
         $timezone = (string) config('services.weather.timezone', 'Asia/Jakarta');
         $forecast = [];
 
-        for ($offset = 0; $offset < 4; $offset++) {
+        for ($offset = 1; $offset <= 4; $offset++) {
             $forecast[] = [
                 'label' => now($timezone)->addDays($offset)->locale('id')->isoFormat('ddd'),
                 'temperature_max' => 30,

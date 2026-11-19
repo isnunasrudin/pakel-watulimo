@@ -1,10 +1,8 @@
+@if ($socialLinks !== [])
 
 <div class="rounded-2xl bg-white p-5 shadow">
   <h3 class="section-title mb-3 font-bold text-green-800">Media Sosial</h3>
 
-  @if ($socialLinks === [])
-    <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">Tautan media sosial belum ditambahkan.</p>
-  @else
     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
       @foreach ($socialLinks as $socialLink)
         @if ($socialLink['safe_url'])
@@ -15,5 +13,5 @@
         @endif
       @endforeach
     </div>
-  @endif
 </div>
+@endif

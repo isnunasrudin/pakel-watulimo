@@ -1,3 +1,4 @@
+@if ($pillars !== [])
 
 <div id="pilar-desa" class="rounded-2xl bg-white p-4 shadow">
   <div class="mb-3 flex items-center justify-between gap-3">
@@ -5,9 +6,6 @@
     <a href="{{ route('pages.officials') }}#pilar-desa" class="text-xs font-semibold text-green-700 hover:underline">Selengkapnya</a>
   </div>
 
-  @if ($pillars === [])
-    <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">Data pilar desa belum tersedia.</p>
-  @else
     <div class="swiper pilarSwiper overflow-hidden rounded-xl">
       <div class="swiper-wrapper">
         @foreach ($pillars as $pillar)
@@ -45,7 +43,6 @@
         <p id="pilarLightboxCaption" aria-live="polite" class="px-5 py-4 text-center text-sm text-gray-200"></p>
       </div>
     </dialog>
-  @endif
 </div>
 
 @push('scripts')
@@ -106,3 +103,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
+@endif

@@ -1,3 +1,4 @@
+@if ($programLinks !== [])
 
 <div class="rounded-2xl bg-white p-4 shadow">
   <div class="mb-3 flex items-center justify-between gap-3">
@@ -5,9 +6,6 @@
     <a href="{{ route('pages.services') }}" class="text-xs font-semibold text-green-700 hover:underline">Semua tautan</a>
   </div>
 
-  @if ($programLinks === [])
-    <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">Gambar sinergi program belum tersedia.</p>
-  @else
     <div class="grid grid-cols-1 gap-3">
       @foreach ($programLinks as $programLink)
         @php($imageUrl = $programLink['image_url'] ?? null)
@@ -24,5 +22,5 @@
         @endif
       @endforeach
     </div>
-  @endif
 </div>
+@endif

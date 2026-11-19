@@ -1,10 +1,8 @@
+@if ($categories->isNotEmpty())
 
 <div class="bg-white rounded-2xl shadow p-5">
   <h3 class="font-bold text-green-800 mb-3 section-title">Kategori Artikel</h3>
 
-  @if ($categories->isEmpty())
-    <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">Belum ada kategori dengan artikel terbit.</p>
-  @else
     <ul class="space-y-2 text-sm">
       @foreach ($categories as $category)
         <li>
@@ -15,5 +13,5 @@
         </li>
       @endforeach
     </ul>
-  @endif
 </div>
+@endif

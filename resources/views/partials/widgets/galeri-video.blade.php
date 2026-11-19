@@ -1,3 +1,4 @@
+@if ($videos->isNotEmpty())
 
 <div id="galeri-video" class="rounded-2xl bg-white p-4 shadow">
   <div class="mb-3 flex items-center justify-between gap-3">
@@ -5,9 +6,6 @@
     <a href="{{ route('gallery.videos') }}" class="text-xs font-semibold text-green-700 hover:underline">Semua video</a>
   </div>
 
-  @if ($videos->isEmpty())
-    <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">Belum ada video yang diterbitkan.</p>
-  @else
     <div class="swiper galeriVideoSwiper overflow-hidden rounded-xl">
       <div class="swiper-wrapper">
         @foreach ($videos as $video)
@@ -30,7 +28,6 @@
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>
     </div>
-  @endif
 </div>
 
 @push('scripts')
@@ -46,3 +43,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
+@endif

@@ -42,7 +42,6 @@ return [
         'longitude' => (float) env('WEATHER_LONGITUDE', 111.65),
         'timezone' => env('WEATHER_TIMEZONE', 'Asia/Jakarta'),
         'location' => env('WEATHER_LOCATION', 'Watulimo, Trenggalek'),
-        'cache_minutes' => (int) env('WEATHER_CACHE_MINUTES', 1440),
         'timeout' => (int) env('WEATHER_TIMEOUT', 5),
     ],
 

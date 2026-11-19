@@ -32,8 +32,13 @@
           'empty' => 'Belum ada agenda mendatang.',
       ],
   ];
+
+  $hasAgenda = $agendaGroups['past']->isNotEmpty()
+      || $agendaGroups['ongoing']->isNotEmpty()
+      || $agendaGroups['upcoming']->isNotEmpty();
 @endphp
 
+@if ($hasAgenda)
 <div id="agenda" class="rounded-2xl bg-white p-4 shadow">
   <div class="mb-3 flex items-center justify-between gap-3">
     <h3 class="section-title font-bold text-green-800">Agenda Desa</h3>
@@ -129,3 +134,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
+@endif

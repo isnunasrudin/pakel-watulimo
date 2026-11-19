@@ -1,25 +1,34 @@
+<div class="rounded-2xl bg-gradient-to-br from-sky-500 to-blue-700 p-3 text-white shadow">
+  <h3 class="mb-2 flex items-center gap-2 text-sm font-bold">
+    <i class="fas fa-cloud-sun text-base" aria-hidden="true"></i>
+    Prakiraan Cuaca
+  </h3>
 
-<div class="bg-gradient-to-br from-sky-500 to-blue-700 text-white rounded-2xl shadow p-5">
-  <h3 class="font-bold mb-3 flex items-center gap-2"><i class="fas fa-cloud-sun text-xl" aria-hidden="true"></i> Prakiraan Cuaca</h3>
-  <div class="text-center py-2">
-    <div class="weather-icon mb-1"><i class="{{ $weather['current']['icon'] }} text-xl" aria-hidden="true"></i></div>
-    <div class="text-4xl font-bold">{{ $weather['current']['temperature'] }}°C</div>
-    <div class="text-sm text-blue-100">{{ $weather['current']['description'] }}</div>
-    <div class="text-xs text-blue-200 mt-1">{{ $weather['location'] }}</div>
-    @if ($weather['is_fallback'])
-      <div class="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2 py-1 text-[10px] font-semibold text-amber-100" title="Penyedia cuaca tidak dapat dihubungi; menampilkan data sementara.">
-        <i class="fas fa-circle-info" aria-hidden="true"></i> Data sementara
-      </div>
-    @elseif ($weather['updated_at'])
-      <div class="mt-1 text-[10px] text-blue-200">Diperbarui {{ $weather['updated_at'] }} WIB</div>
-    @endif
+  <div class="flex items-center justify-between gap-3 rounded-xl bg-white/10 px-3 py-2">
+    <div class="flex items-center gap-2">
+      <i class="{{ $weather['current']['icon'] }} text-2xl text-amber-300" aria-hidden="true"></i>
+      <span class="text-2xl font-bold leading-none">{{ $weather['current']['temperature'] }}°C</span>
+    </div>
+    <div class="min-w-0 text-right">
+      <p class="text-xs font-medium text-blue-50">{{ $weather['current']['description'] }}</p>
+      <p class="mt-0.5 text-[10px] text-blue-200">{{ $weather['location'] }}</p>
+    </div>
   </div>
-  <div class="mt-4 grid grid-cols-4 gap-2 text-center text-xs">
+
+  @if ($weather['is_fallback'])
+    <p class="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-semibold text-amber-100" title="Penyedia cuaca tidak dapat dihubungi; menampilkan data sementara.">
+      <i class="fas fa-circle-info" aria-hidden="true"></i> Data sementara
+    </p>
+  @elseif ($weather['updated_at'])
+    <p class="mt-1 text-[10px] text-blue-200">Diperbarui {{ $weather['updated_at'] }} WIB</p>
+  @endif
+
+  <div class="mt-2 grid grid-cols-4 gap-1.5 text-center text-[10px]">
     @foreach ($weather['forecast'] as $day)
-      <div class="rounded-lg bg-white/15 p-2" title="{{ $day['description'] }}">
-        <div>{{ $day['label'] }}</div>
-        <i class="{{ $day['icon'] }} my-1 text-lg text-amber-300" aria-hidden="true"></i>
-        <div>{{ $day['temperature_max'] }}°</div>
+      <div class="rounded-lg bg-white/15 px-1 py-1.5" title="{{ $day['description'] }}">
+        <div class="text-blue-100">{{ $day['label'] }}</div>
+        <i class="{{ $day['icon'] }} my-0.5 text-sm text-amber-300" aria-hidden="true"></i>
+        <div class="font-semibold">{{ $day['temperature_max'] }}°</div>
       </div>
     @endforeach
   </div>
