@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\HeaderMenuItem;
 use App\Models\ServiceLink;
 use App\Models\SocialLink;
+use App\Services\SidebarDataService;
 use App\Services\VillageProfileService;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
@@ -41,6 +42,14 @@ class AppServiceProvider extends ServiceProvider
         FilamentAsset::register([
             Css::make('article-rich-editor-resizable', resource_path('css/article-rich-editor-resizable.css')),
         ]);
+
+        ViewFacade::composer('partials.home.sidebar', function (View $view): void {
+            if (array_key_exists('weather', $view->getData())) {
+                return;
+            }
+
+            $view->with(app(SidebarDataService::class)->get());
+        });
 
         ViewFacade::composer('partials.home.navbar', function (View $view): void {
             $headerMenu = Cache::remember('public.header-menu', now()->addMinutes(10), function (): array {

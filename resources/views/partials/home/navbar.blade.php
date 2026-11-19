@@ -8,7 +8,7 @@
   <div class="flex h-16 items-center justify-between lg:h-20">
     <a href="{{ route('home') }}" class="flex items-center gap-3">
       @if ($logoUrl)
-        <img src="{{ $logoUrl }}" alt="Logo {{ $villageSettings->village_name }}" class="h-11 w-11 rounded-full object-contain">
+        <img src="{{ $logoUrl }}" alt="Logo {{ $villageSettings->village_name }}" class="h-11 w-11 object-contain">
       @else
         <div class="w-11 h-11 rounded-full bg-green-700 flex items-center justify-center text-white font-bold text-lg">{{ \Illuminate\Support\Str::substr($villageSettings->village_name ?: 'Desa Pakel', 0, 1) }}</div>
       @endif

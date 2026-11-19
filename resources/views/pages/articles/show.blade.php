@@ -72,7 +72,7 @@
 @include('partials.home.navbar')
 
 <main class="bg-white py-10 md:bg-gray-50 md:py-14">
-  <div class="mx-auto max-w-6xl px-4 md:px-6">
+  <div class="mx-auto max-w-7xl px-4 md:px-6">
     <nav aria-label="Breadcrumb" class="mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-500">
       <a href="{{ route('home') }}" class="transition hover:text-green-700">Beranda</a>
       <i class="fas fa-chevron-right text-xs" aria-hidden="true"></i>
@@ -85,6 +85,8 @@
       <span aria-current="page" class="text-gray-700">Artikel</span>
     </nav>
 
+    <div class="grid gap-6 lg:grid-cols-3">
+      <div class="min-w-0 lg:col-span-2">
     <article class="bg-transparent md:overflow-hidden md:rounded-2xl md:bg-white md:shadow-lg">
       <header class="py-5 md:p-10">
         <div class="mb-5 flex flex-wrap gap-2">
@@ -277,6 +279,10 @@
         </div>
       </section>
     @endif
+      </div>
+
+      @include('partials.home.sidebar')
+    </div>
   </div>
 </main>
 
