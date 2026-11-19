@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', $villageSettings->village_name.' | Website Resmi Pemerintah Desa')
+@section('title', 'Website Resmi '.($villageSettings->village_name ?: 'Desa Pakel').' Kec. '.($villageSettings->district_name ?: 'Watulimo').' Kab. '.($villageSettings->regency_name ?: 'Trenggalek'))
 @section('meta_description', $villageSettings->description ?: 'Website resmi Desa Pakel, Kecamatan Watulimo, Kabupaten Trenggalek. Informasi desa, berita, agenda, galeri, dan layanan masyarakat.')
 @section('canonical', url('/'))
-@section('og_title', $villageSettings->village_name.' | Website Resmi')
-@section('og_image', $albums->isNotEmpty() ? url($albums->first()->coverUrl()) : asset('favicon.ico'))
+@section('og_title', 'Website Resmi '.($villageSettings->village_name ?: 'Desa Pakel'))
+@section('og_image', $villageSettings->heroUrl() ?: ($albums->isNotEmpty() ? url($albums->first()->coverUrl()) : ''))
 
 @section('content')
 @include('partials.home.navbar')

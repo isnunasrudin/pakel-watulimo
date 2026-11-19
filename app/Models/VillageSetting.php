@@ -115,7 +115,8 @@ class VillageSetting extends Model implements HasMedia
      */
     public function iconUrl(): ?string
     {
-        $url = $this->getFirstMediaUrl('icon', 'webp_icon');
+        $url = $this->getFirstMediaUrl('icon', 'webp_icon')
+            ?: $this->getFirstMediaUrl('icon');
 
         return filled($url) ? $url : null;
     }
@@ -125,7 +126,8 @@ class VillageSetting extends Model implements HasMedia
      */
     public function faviconUrl(): string
     {
-        $url = $this->getFirstMediaUrl('favicon', 'webp_favicon');
+        $url = $this->getFirstMediaUrl('favicon', 'webp_favicon')
+            ?: $this->getFirstMediaUrl('favicon');
 
         return filled($url) ? $url : asset('favicon.ico');
     }

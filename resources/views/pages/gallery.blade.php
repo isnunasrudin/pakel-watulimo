@@ -4,7 +4,7 @@
 @section('meta_description', 'Galeri foto kegiatan, pembangunan, dan kehidupan masyarakat Desa Pakel, Watulimo.')
 @section('canonical', route('gallery.photos'))
 @section('og_title', 'Galeri Foto Desa Pakel')
-@section('og_image', count($albums) > 0 ? url($albums->first()->coverUrl()) : asset('favicon.ico'))
+@section('og_image', count($albums) > 0 ? url($albums->first()->coverUrl()) : '')
 
 @section('content')
 @include('partials.home.navbar')

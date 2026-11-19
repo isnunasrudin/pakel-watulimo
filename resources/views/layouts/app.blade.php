@@ -1,14 +1,75 @@
 @php
     $villageSettings = app(\App\Services\VillageProfileService::class)->settings();
-    $defaultDescription = 'Website resmi Desa Pakel, Kecamatan Watulimo, Kabupaten Trenggalek. Informasi desa, berita, agenda, galeri, dan layanan masyarakat.';
-    $pageTitle = trim((string) $__env->yieldContent('title')) ?: 'Desa Pakel, Watulimo - Website Resmi Pemerintah Desa';
-    $pageDescription = trim((string) $__env->yieldContent('meta_description')) ?: $defaultDescription;
-    $canonicalUrl = trim((string) $__env->yieldContent('canonical')) ?: url()->current();
+    $siteName = $villageSettings->village_name ?: 'Desa Pakel';
+    $defaultDescription = 'Website resmi '.$siteName.', Kecamatan '.($villageSettings->district_name ?: 'Watulimo').', Kabupaten '.($villageSettings->regency_name ?: 'Trenggalek').'. Informasi desa, berita, agenda, galeri, dan layanan masyarakat.';
+    $pageTitle = trim((string) $__env->yieldContent('title')) ?: 'Website Resmi '.$siteName;
+    $pageDescription = \Illuminate\Support\Str::limit(
+        trim((string) $__env->yieldContent('meta_description')) ?: $defaultDescription,
+        160,
+    );
+    $canonicalUrl = trim((string) $__env->yieldContent('canonical')) ?: request()->url();
+    $currentPage = request()->integer('page');
+
+    if ($currentPage > 1) {
+        $canonicalUrl = request()->url().'?page='.$currentPage;
+    }
+
     $ogTitle = trim((string) $__env->yieldContent('og_title')) ?: $pageTitle;
-    $ogImage = trim((string) $__env->yieldContent('og_image')) ?: asset('favicon.ico');
+    $ogImage = trim((string) $__env->yieldContent('og_image'))
+        ?: ($villageSettings->heroUrl() ?: $villageSettings->iconUrl() ?: asset('favicon.ico'));
     $ogType = trim((string) $__env->yieldContent('og_type')) ?: 'website';
+    $robots = request()->filled('q') ? 'noindex, follow' : 'index, follow';
     $faviconUrl = $villageSettings->faviconUrl();
     $appleTouchIconUrl = $villageSettings->appleTouchIconUrl();
+    $jsonFlags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+
+    $organizationAddress = array_filter([
+        '@type' => 'PostalAddress',
+        'streetAddress' => $villageSettings->address,
+        'addressLocality' => $villageSettings->district_name,
+        'addressRegion' => $villageSettings->province_name,
+        'addressCountry' => 'ID',
+    ], static fn (mixed $value): bool => filled($value));
+
+    $organizationContact = array_filter([
+        '@type' => 'ContactPoint',
+        'contactType' => 'customer service',
+        'telephone' => $villageSettings->phone,
+        'email' => $villageSettings->email,
+    ], static fn (mixed $value): bool => filled($value));
+
+    $structuredData = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            array_filter([
+                '@type' => 'GovernmentOrganization',
+                '@id' => url('/').'#organization',
+                'name' => $siteName,
+                'url' => url('/'),
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => $villageSettings->iconUrl() ?: $faviconUrl,
+                ],
+                'address' => $organizationAddress,
+                'contactPoint' => $organizationContact,
+            ], static fn (mixed $value): bool => filled($value)),
+            [
+                '@type' => 'WebSite',
+                '@id' => url('/').'#website',
+                'name' => $siteName,
+                'url' => url('/'),
+                'inLanguage' => 'id-ID',
+                'publisher' => [
+                    '@id' => url('/').'#organization',
+                ],
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => route('articles.index').'?q={search_term_string}',
+                    'query-input' => 'required name=search_term_string',
+                ],
+            ],
+        ],
+    ];
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -19,21 +80,27 @@
 <link rel="apple-touch-icon" href="{{ $appleTouchIconUrl }}">
 <title>{{ $pageTitle }}</title>
 <meta name="description" content="{{ $pageDescription }}">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="{{ $robots }}">
+<meta name="theme-color" content="#166534">
 <link rel="canonical" href="{{ $canonicalUrl }}">
 
 <meta property="og:type" content="{{ $ogType }}">
-<meta property="og:site_name" content="Desa Pakel">
+<meta property="og:site_name" content="{{ $siteName }}">
 <meta property="og:locale" content="id_ID">
 <meta property="og:title" content="{{ $ogTitle }}">
 <meta property="og:description" content="{{ $pageDescription }}">
 <meta property="og:url" content="{{ $canonicalUrl }}">
 <meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:alt" content="{{ $ogTitle }}">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $ogTitle }}">
 <meta name="twitter:description" content="{{ $pageDescription }}">
 <meta name="twitter:image" content="{{ $ogImage }}">
+<meta name="twitter:image:alt" content="{{ $ogTitle }}">
+
+<script type="application/ld+json">{!! json_encode($structuredData, $jsonFlags) !!}</script>
+@stack('head')
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <script>try{if(localStorage.getItem('pakel-theme')==='dark')document.documentElement.classList.add('dark-mode')}catch(e){}</script>
 </head>

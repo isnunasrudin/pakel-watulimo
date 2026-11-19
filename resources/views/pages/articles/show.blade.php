@@ -7,6 +7,67 @@
 @section('og_title', $article->meta_title ?: $article->title)
 @section('og_image', url($article->coverUrl()))
 
+@php
+    $villageSettings = app(\App\Services\VillageProfileService::class)->settings();
+    $publishedAt = $article->published_at ?? $article->created_at;
+    $articleBreadcrumbs = [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => route('home')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Berita', 'item' => route('articles.index')],
+    ];
+
+    if ($article->category) {
+        $articleBreadcrumbs[] = ['@type' => 'ListItem', 'position' => 3, 'name' => $article->category->name, 'item' => route('categories.show', $article->category)];
+    }
+
+    $articleBreadcrumbs[] = ['@type' => 'ListItem', 'position' => count($articleBreadcrumbs) + 1, 'name' => $article->title, 'item' => route('articles.show', $article)];
+
+    $articleStructuredData = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            array_filter([
+                '@type' => 'Article',
+                'headline' => $article->title,
+                'description' => $article->meta_description ?: $article->summary(160),
+                'image' => [url($article->coverUrl())],
+                'datePublished' => $publishedAt?->toIso8601String(),
+                'dateModified' => $article->updated_at?->toIso8601String(),
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $article->author?->name ?: $villageSettings->village_name,
+                ],
+                'publisher' => [
+                    '@type' => 'GovernmentOrganization',
+                    'name' => $villageSettings->village_name,
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        'url' => $villageSettings->iconUrl() ?: $villageSettings->faviconUrl(),
+                    ],
+                ],
+                'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => route('articles.show', $article)],
+                'articleSection' => $article->category?->name,
+                'inLanguage' => 'id-ID',
+                'url' => route('articles.show', $article),
+            ], static fn (mixed $value): bool => filled($value)),
+            [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => $articleBreadcrumbs,
+            ],
+        ],
+    ];
+@endphp
+
+@push('head')
+<meta property="article:published_time" content="{{ $publishedAt?->toIso8601String() }}">
+<meta property="article:modified_time" content="{{ $article->updated_at?->toIso8601String() }}">
+@if ($article->author)
+    <meta property="article:author" content="{{ $article->author->name }}">
+@endif
+@if ($article->category)
+    <meta property="article:section" content="{{ $article->category->name }}">
+@endif
+<script type="application/ld+json">{!! json_encode($articleStructuredData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+@endpush
+
 @section('content')
 @include('partials.home.navbar')
 

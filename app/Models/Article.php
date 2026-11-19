@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
@@ -169,6 +170,18 @@ class Article extends Model implements HasMedia, HasRichContent
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    protected static function booted(): void
+    {
+        $invalidateRelated = static fn (): bool => Cache::forever(
+            'articles.related.version.v3',
+            (string) Str::uuid(),
+        );
+
+        static::saved($invalidateRelated);
+        static::deleted($invalidateRelated);
+        static::restored($invalidateRelated);
     }
 
     /**

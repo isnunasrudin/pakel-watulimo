@@ -4,7 +4,7 @@
 @section('meta_description', $page->meta_description ?: $page->summary())
 @section('canonical', route('pages.show', $page))
 @section('og_title', $page->meta_title ?: $page->title)
-@section('og_image', $page->coverUrl() ? url($page->coverUrl()) : asset('favicon.ico'))
+@section('og_image', $page->coverUrl() ? url($page->coverUrl()) : '')
 
 @section('content')
 @include('partials.home.navbar')

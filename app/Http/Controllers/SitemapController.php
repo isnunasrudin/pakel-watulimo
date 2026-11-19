@@ -6,6 +6,7 @@ use App\Models\Album;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Page;
+use App\Models\VillageSetting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 
@@ -16,15 +17,17 @@ class SitemapController extends Controller
      */
     public function __invoke(): Response
     {
+        $siteUpdatedAt = VillageSetting::current()->updated_at?->toAtomString();
+
         $urls = [
-            ['loc' => route('home'), 'changefreq' => 'daily', 'priority' => '1.0'],
-            ['loc' => route('articles.index'), 'changefreq' => 'daily', 'priority' => '0.9'],
-            ['loc' => route('gallery.photos'), 'changefreq' => 'weekly', 'priority' => '0.8'],
-            ['loc' => route('gallery.videos'), 'changefreq' => 'weekly', 'priority' => '0.7'],
-            ['loc' => route('pages.profile'), 'changefreq' => 'monthly', 'priority' => '0.7'],
-            ['loc' => route('pages.officials'), 'changefreq' => 'monthly', 'priority' => '0.7'],
-            ['loc' => route('pages.services'), 'changefreq' => 'monthly', 'priority' => '0.7'],
-            ['loc' => route('pages.contact'), 'changefreq' => 'monthly', 'priority' => '0.6'],
+            ['loc' => route('home'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'daily', 'priority' => '1.0'],
+            ['loc' => route('articles.index'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'daily', 'priority' => '0.9'],
+            ['loc' => route('gallery.photos'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'weekly', 'priority' => '0.8'],
+            ['loc' => route('gallery.videos'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'weekly', 'priority' => '0.7'],
+            ['loc' => route('pages.profile'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'monthly', 'priority' => '0.7'],
+            ['loc' => route('pages.officials'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'monthly', 'priority' => '0.7'],
+            ['loc' => route('pages.services'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'monthly', 'priority' => '0.7'],
+            ['loc' => route('pages.contact'), 'lastmod' => $siteUpdatedAt, 'changefreq' => 'monthly', 'priority' => '0.6'],
         ];
 
         Page::query()

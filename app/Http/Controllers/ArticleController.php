@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Services\RelatedArticleService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ArticleController extends Controller
 {
+    public function __construct(private RelatedArticleService $relatedArticles) {}
+
     /**
      * Display a paginated list of published articles.
      */
@@ -41,18 +44,9 @@ class ArticleController extends Controller
         $article->increment('views_count');
         $article->load(['category', 'author', 'approvedComments', 'media']);
 
-        $relatedArticles = Article::query()
-            ->published()
-            ->with(['category', 'author', 'media'])
-            ->whereKeyNot($article->getKey())
-            ->when($article->category_id, fn ($query, int $categoryId) => $query->where('category_id', $categoryId))
-            ->latest('published_at')
-            ->limit(3)
-            ->get();
-
         return view('pages.articles.show', [
             'article' => $article,
-            'relatedArticles' => $relatedArticles,
+            'relatedArticles' => $this->relatedArticles->getFor($article),
         ]);
     }
 }

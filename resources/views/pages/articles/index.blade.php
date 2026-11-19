@@ -5,13 +5,13 @@
   @section('meta_description', $category->description ?: 'Artikel kategori '.$category->name.' dari Desa Pakel.')
   @section('canonical', route('categories.show', $category))
   @section('og_title', $category->name.' | Berita Desa Pakel')
-  @section('og_image', count($articles) > 0 ? url($articles->first()->coverUrl()) : asset('favicon.ico'))
+  @section('og_image', count($articles) > 0 ? url($articles->first()->coverUrl()) : '')
 @else
   @section('title', 'Berita & Artikel Desa Pakel | Website Resmi Pemerintah Desa')
   @section('meta_description', 'Berita dan artikel terbaru dari Desa Pakel, Watulimo, Trenggalek: pembangunan, pemerintahan, sosial, dan kegiatan warga.')
   @section('canonical', route('articles.index'))
   @section('og_title', 'Berita & Artikel Desa Pakel')
-  @section('og_image', count($articles) > 0 ? url($articles->first()->coverUrl()) : asset('favicon.ico'))
+  @section('og_image', count($articles) > 0 ? url($articles->first()->coverUrl()) : '')
 @endisset
 
 @section('content')
