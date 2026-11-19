@@ -9,7 +9,7 @@
 @section('content')
 @include('partials.home.navbar')
 
-<main class="bg-gray-50 py-10 md:py-14">
+<main class="bg-white py-10 md:bg-gray-50 md:py-14">
   <div class="mx-auto max-w-5xl px-4 md:px-6">
     <nav aria-label="Breadcrumb" class="mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-500">
       <a href="{{ route('home') }}" class="transition hover:text-green-700">Beranda</a>
@@ -17,7 +17,7 @@
       <span aria-current="page" class="text-gray-700">{{ $page->title }}</span>
     </nav>
 
-    <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
+    <article class="bg-transparent md:overflow-hidden md:rounded-2xl md:bg-white md:shadow-lg">
       @if ($page->coverUrl())
         <figure>
           <button
@@ -36,7 +36,7 @@
         </figure>
       @endif
 
-      <header class="p-6 md:p-10">
+      <header class="py-5 md:p-10">
         <span class="badge mb-3 bg-amber-100 text-amber-700">Halaman</span>
         <h1 class="text-3xl font-bold leading-tight text-gray-900 md:text-4xl">{{ $page->title }}</h1>
 
@@ -50,7 +50,7 @@
         </p>
       </header>
 
-      <div class="px-6 pb-8 md:px-10 md:pb-10">
+      <div class="px-0 pb-8 md:px-10 md:pb-10">
         @if (filled($page->content))
           <div class="article-body">
             {!! $page->renderRichContent('content') !!}

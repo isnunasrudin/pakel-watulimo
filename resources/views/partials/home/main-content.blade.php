@@ -61,7 +61,7 @@
           <h2 class="text-3xl font-bold section-title">{{ $homeCopy['news_heading'] }}</h2>
           <a href="{{ route('articles.index') }}" class="text-green-700 font-semibold text-sm hover:underline">{{ $homeCopy['news_link_label'] }} <i class="fas fa-arrow-right ml-1 text-sm" aria-hidden="true"></i></a>
         </div>
-        <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-4 sm:gap-8">
           @forelse ($articles as $article)
             @include('partials.articles.card', ['article' => $article])
           @empty

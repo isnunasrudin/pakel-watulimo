@@ -71,7 +71,7 @@
 @section('content')
 @include('partials.home.navbar')
 
-<main class="bg-gray-50 py-10 md:py-14">
+<main class="bg-white py-10 md:bg-gray-50 md:py-14">
   <div class="mx-auto max-w-6xl px-4 md:px-6">
     <nav aria-label="Breadcrumb" class="mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-500">
       <a href="{{ route('home') }}" class="transition hover:text-green-700">Beranda</a>
@@ -85,8 +85,8 @@
       <span aria-current="page" class="text-gray-700">Artikel</span>
     </nav>
 
-    <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
-      <header class="p-6 md:p-10">
+    <article class="bg-transparent md:overflow-hidden md:rounded-2xl md:bg-white md:shadow-lg">
+      <header class="py-5 md:p-10">
         <div class="mb-5 flex flex-wrap gap-2">
           @if ($article->is_pinned)
             <span class="badge bg-amber-100 text-amber-700"><i class="fas fa-thumbtack mr-1" aria-hidden="true"></i>Disematkan</span>
@@ -159,13 +159,13 @@
           </span>
         </button>
         @if ($article->category)
-          <figcaption class="px-6 pt-3 text-sm text-gray-500 md:px-10">
+          <figcaption class="pt-3 text-sm text-gray-500 md:px-10">
             Artikel kategori {{ $article->category->name }} — Desa Pakel.
           </figcaption>
         @endif
       </figure>
 
-      <div class="px-6 pb-8 pt-6 md:px-10 md:pb-10">
+      <div class="px-0 pb-8 pt-6 md:px-10 md:pb-10">
         @if ($article->excerpt)
           <p class="mb-8 text-lg leading-8 text-gray-700">{{ $article->excerpt }}</p>
         @endif
@@ -177,7 +177,7 @@
         @include('partials.attachments', ['attachments' => $article->getMedia('attachments')])
       </div>
 
-      <section class="border-t border-gray-100 px-6 py-8 md:px-10" aria-labelledby="comments-title">
+      <section class="border-t border-gray-100 px-0 py-8 md:px-10" aria-labelledby="comments-title">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h2 id="comments-title" class="text-xl font-bold text-gray-900">Komentar <span class="text-sm font-normal text-gray-500">({{ $article->approvedComments->count() }})</span></h2>
           <button id="commentFormToggle" type="button" class="inline-flex items-center gap-2 rounded-lg border border-green-700 px-4 py-2 text-sm font-semibold text-green-700 transition hover:bg-green-50" aria-expanded="false" aria-controls="commentForm">
