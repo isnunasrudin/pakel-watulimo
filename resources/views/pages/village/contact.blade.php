@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Kontak '.$villageSettings->village_name.' | Website Resmi')
+@section('title', 'Kontak')
 @section('meta_description', 'Informasi kontak dan lokasi kantor '.$villageSettings->village_name.', Kecamatan '.$villageSettings->district_name.'.')
 @section('canonical', route('pages.contact'))
-@section('og_title', 'Kontak '.$villageSettings->village_name)
 
 @section('content')
 @include('partials.home.navbar')

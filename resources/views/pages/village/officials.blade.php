@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Pemerintahan '.$villageSettings->village_name.' | Perangkat Desa')
+@section('title', 'Pemerintahan Desa')
 @section('meta_description', 'Susunan perangkat desa dan pemerintahan '.$villageSettings->village_name.', Kecamatan '.$villageSettings->district_name.'.')
 @section('canonical', route('pages.officials'))
-@section('og_title', 'Pemerintahan '.$villageSettings->village_name)
 
 @section('content')
 @include('partials.home.navbar')

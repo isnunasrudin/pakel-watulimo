@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('title', $article->meta_title ?: $article->title.' | Desa Pakel')
+@section('title', $article->meta_title ?: $article->title)
 @section('meta_description', $article->meta_description ?: $article->summary())
 @section('canonical', route('articles.show', $article))
 @section('og_type', 'article')
-@section('og_title', $article->meta_title ?: $article->title)
 @section('og_image', url($article->coverUrl()))
 
 @php

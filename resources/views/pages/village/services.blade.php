@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Layanan '.$villageSettings->village_name.' | Website Resmi')
+@section('title', 'Layanan Publik')
 @section('meta_description', 'Layanan publik dan tautan penting '.$villageSettings->village_name.', Kecamatan '.$villageSettings->district_name.'.')
 @section('canonical', route('pages.services'))
-@section('og_title', 'Layanan '.$villageSettings->village_name)
 
 @section('content')
 @include('partials.home.navbar')

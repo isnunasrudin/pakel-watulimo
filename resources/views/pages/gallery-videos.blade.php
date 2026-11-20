@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Galeri Video Desa Pakel | Website Resmi Pemerintah Desa')
+@section('title', 'Galeri Video')
 @section('meta_description', 'Galeri video kegiatan dan dokumentasi Desa Pakel, Watulimo.')
 @section('canonical', route('gallery.videos'))
-@section('og_title', 'Galeri Video Desa Pakel')
 @section('og_image', count($videos) > 0 ? url($videos->first()->thumbnailUrl()) : asset('favicon.ico'))
 
 @section('content')

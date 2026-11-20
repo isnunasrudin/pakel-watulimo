@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $villageSettings->village_name.' | Profil Desa')
+@section('title', 'Profil Desa')
 @section('meta_description', $villageSettings->description ?: 'Profil '.$villageSettings->village_name.', Kecamatan '.$villageSettings->district_name.', Kabupaten '.$villageSettings->regency_name.'.')
 @section('canonical', route('pages.profile'))
-@section('og_title', $villageSettings->village_name.' | Profil Desa')
 
 @section('content')
 @include('partials.home.navbar')

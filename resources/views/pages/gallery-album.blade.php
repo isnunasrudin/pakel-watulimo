@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $album->title.' | Galeri Foto Desa Pakel')
+@section('title', 'Album Foto: '.$album->title)
 @section('meta_description', $album->description ?: 'Album foto '.$album->title.' dari Desa Pakel.')
 @section('canonical', route('gallery.album', $album))
-@section('og_title', $album->title.' | Galeri Foto Desa Pakel')
 @section('og_image', url($album->coverUrl()))
 
 @section('content')

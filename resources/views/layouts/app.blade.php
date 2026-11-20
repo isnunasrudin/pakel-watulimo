@@ -2,22 +2,44 @@
     $villageSettings = app(\App\Services\VillageProfileService::class)->settings();
     $siteName = $villageSettings->village_name ?: 'Desa Pakel';
     $defaultDescription = 'Website resmi '.$siteName.', Kecamatan '.($villageSettings->district_name ?: 'Watulimo').', Kabupaten '.($villageSettings->regency_name ?: 'Trenggalek').'. Informasi desa, berita, agenda, galeri, dan layanan masyarakat.';
-    $pageTitle = trim((string) $__env->yieldContent('title')) ?: 'Website Resmi '.$siteName;
+    $districtName = $villageSettings->district_name ?: 'Watulimo';
+    $siteSuffix = $siteName.', '.$districtName;
+    $sectionContent = static fn (string $section): string => html_entity_decode(
+        trim((string) $__env->yieldContent($section)),
+        ENT_QUOTES | ENT_HTML5,
+        'UTF-8',
+    );
+
+    $titleContent = $sectionContent('title');
+    $fullTitle = $sectionContent('full_title');
+
+    if ($fullTitle === '' && $titleContent !== '') {
+        $titleContent = preg_replace(
+            '/\s*\|\s*'.preg_quote($siteName, '/').'(?:,\s*'.preg_quote($districtName, '/').')?\s*$/iu',
+            '',
+            $titleContent,
+        ) ?? $titleContent;
+
+        $titleContent = trim($titleContent);
+        $fullTitle = $titleContent !== '' ? $titleContent.' | '.$siteSuffix : '';
+    }
+
+    $pageTitle = $fullTitle ?: 'Website Resmi '.$siteName;
     $pageDescription = \Illuminate\Support\Str::limit(
-        trim((string) $__env->yieldContent('meta_description')) ?: $defaultDescription,
+        $sectionContent('meta_description') ?: $defaultDescription,
         160,
     );
-    $canonicalUrl = trim((string) $__env->yieldContent('canonical')) ?: request()->url();
+    $canonicalUrl = $sectionContent('canonical') ?: request()->url();
     $currentPage = request()->integer('page');
 
     if ($currentPage > 1) {
         $canonicalUrl = request()->url().'?page='.$currentPage;
     }
 
-    $ogTitle = trim((string) $__env->yieldContent('og_title')) ?: $pageTitle;
-    $ogImage = trim((string) $__env->yieldContent('og_image'))
+    $ogTitle = $sectionContent('og_title') ?: $pageTitle;
+    $ogImage = $sectionContent('og_image')
         ?: ($villageSettings->heroUrl() ?: $villageSettings->iconUrl() ?: asset('favicon.ico'));
-    $ogType = trim((string) $__env->yieldContent('og_type')) ?: 'website';
+    $ogType = $sectionContent('og_type') ?: 'website';
     $robots = request()->filled('q') ? 'noindex, follow' : 'index, follow';
     $faviconUrl = $villageSettings->faviconUrl();
     $appleTouchIconUrl = $villageSettings->appleTouchIconUrl();

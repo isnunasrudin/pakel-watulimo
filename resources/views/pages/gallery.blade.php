@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Galeri Foto Desa Pakel | Website Resmi Pemerintah Desa')
+@section('title', 'Galeri Foto')
 @section('meta_description', 'Galeri foto kegiatan, pembangunan, dan kehidupan masyarakat Desa Pakel, Watulimo.')
 @section('canonical', route('gallery.photos'))
-@section('og_title', 'Galeri Foto Desa Pakel')
 @section('og_image', count($albums) > 0 ? url($albums->first()->coverUrl()) : '')
 
 @section('content')
