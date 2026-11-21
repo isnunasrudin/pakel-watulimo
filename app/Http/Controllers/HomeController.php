@@ -30,6 +30,10 @@ class HomeController extends Controller
         VillageProfileService $villageProfile,
         VillageContentService $villageContentService,
     ): View {
+
+        // Membantu disable search engine terkena spam
+        if($request->exists('d')) abort(404);
+
         $articles = Article::query()
             ->published()
             ->with(['category', 'author', 'media'])
